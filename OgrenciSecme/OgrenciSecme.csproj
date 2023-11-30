@@ -73,12 +73,11 @@
     </Compile>
     <Compile Include="Models\Entities\Ders.cs" />
     <Compile Include="Models\Entities\Donem.cs" />
-    <Compile Include="Models\Entities\DonemDer.cs" />
     <Compile Include="Models\Entities\Egitim.cs" />
     <Compile Include="Models\Entities\Grup.cs" />
     <Compile Include="Models\Entities\Kullanici.cs" />
-    <Compile Include="Models\Entities\Ogrenci.cs" />
     <Compile Include="Models\MainModels\MainYukleModel.cs" />
+    <Compile Include="Models\Entities\Ogrenci.cs" />
     <Compile Include="Models\SeciciContext.cs" />
     <Compile Include="Models\sysdiagram.cs" />
     <Compile Include="Program.cs" />

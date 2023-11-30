@@ -14,7 +14,6 @@ namespace OgrenciSecme.Models
 
         public virtual DbSet<Ders> Ders { get; set; }
         public virtual DbSet<Donem> Donems { get; set; }
-        public virtual DbSet<DonemDer> DonemDers { get; set; }
         public virtual DbSet<Egitim> Egitims { get; set; }
         public virtual DbSet<Grup> Grups { get; set; }
         public virtual DbSet<Kullanici> Kullanicis { get; set; }

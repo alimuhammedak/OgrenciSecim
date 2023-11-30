@@ -18,14 +18,11 @@ namespace OgrenciSecme
     public partial class MainFrm : Form
     {
         private string title = "Öğrenci Kayıt";
-        private string fileName;
-        private string listText;
+        private string excelFile;
+        private string kayitliOgrencis;
         private List<string> kayitliOgrenci = new List<string>();
-
-        public DataSet result { get; set; }
-
         private MainYukleModel model = new MainYukleModel();
-
+        public DataSet result { get; set; }
         public MainFrm()
         {
             InitializeComponent();
@@ -47,14 +44,15 @@ namespace OgrenciSecme
 
         private void DosyaSecme_Click(object sender, EventArgs e)
         {
+
             using (OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Excel Dosyaları 97-2003|*.xls|Excel Dosyaları|*.xlsx", Title = "Excel Dosyaları" })
             {
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    fileName = openFileDialog.FileName;
+                    excelFile = openFileDialog.FileName;
                     try
                     {
-                        using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
+                        using (var stream = File.Open(excelFile, FileMode.Open, FileAccess.Read))
                         {
                             using (IExcelDataReader excelDataReader = ExcelReaderFactory.CreateReader(stream))
                             {
@@ -74,41 +72,37 @@ namespace OgrenciSecme
 
                 }
             }
+
         }
 
         private void yukle_Click(object sender, EventArgs e)
         {
-            if (fileName is null)
+
+            if (excelFile is null)  //Dosyanin secilip secilmediği
             {
-                Console.Beep();
                 MessageBox.Show("Lutfen dosya seçmeyi unutmayın", "Dikkat", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.dosyaSecme.FlatAppearance.BorderColor = Color.Red;
-                this.dosyaSecme.FlatAppearance.BorderSize = 6; // İsteğe bağlı olarak kenarlık kalınlığını ayarlayabilirsiniz
+                this.dosyaSecme.FlatAppearance.BorderSize = 6;
             }
             else
             {
                 try
                 {
-                    DataTable dataTable = result.Tables[0];
+                    DataTable dataTable = result.Tables[0]; //Excel Kitap Seçimi
 
                     using (var dbContext = new SeciciContext())
                     {
-                        //var model = new MainYukleModel()
-                        //{ 
-                        //    Egitim = dbContext.Egitims.Where(x => x.Donem.donemIDad == donemCmb.SelectedItem.ToString() && x.ders.ad == dersCmb.SelectedItem.ToString() && x.grup.ad == grupCmb.SelectedItem.ToString()).FirstOrDefault()
-
-                        //}
                         foreach (DataRow row in dataTable.Rows)
                         {
                             // Excel'den gelen verileri al
-                            string ad = row["Name"]?.ToString();
-                            string ogrenciNo = row["Okul No"]?.ToString() ?? null;
-                            if (ogrenciNo == "" || ogrenciNo is null) continue;
+                            model.Ogrenci.ad = row["Name"]?.ToString();
+                            model.Ogrenci.ogrenciNo = row["Okul No"]?.ToString() ?? null;
+                            if (model.Ogrenci.ogrenciNo == "" || model.Ogrenci.ogrenciNo is null) continue; //Ogrenci numarası yoksa atla
 
-                            // Veritabanına öğrenci ekle
-                            if (dbContext.Ogrencis.Where(x => x.ogrenciNo == ogrenciNo).FirstOrDefault() == null)
+                            //Yeni öğrenci ise ekle
+                            if (dbContext.Ogrencis.Where(x => x.ogrenciNo == model.Ogrenci.ogrenciNo).FirstOrDefault() == null)
                             {
-                                dbContext.Ogrencis.Add(new Ogrenci { ad = ad, ogrenciNo = ogrenciNo });
+                                dbContext.Ogrencis.Add(new Ogrenci { ad = model.Ogrenci.ad, ogrenciNo = model.Ogrenci.ogrenciNo });
                                 dbContext.SaveChanges();
 
                                 dbContext.Egitims.Add(new Egitim
@@ -116,26 +110,54 @@ namespace OgrenciSecme
                                     dersID = model.Egitim.dersID,
                                     donemID = model.Egitim.donemID,
                                     grupID = model.Egitim.grupID,
-                                    ogrenciID = dbContext.Ogrencis.Where(x => x.ogrenciNo == ogrenciNo).FirstOrDefault().ogrenciID,
+                                    ogrenciID = dbContext.Ogrencis.Where(x => x.ogrenciNo == model.Ogrenci.ogrenciNo).FirstOrDefault().ogrenciID,
                                     kullaniciID = 1
                                 });
 
                             }
-                            else
+                            else //Öğrenci varsa
                             {
-                                model.Ogrenci.ogrenciID = dbContext.Ogrencis.Where(x => x.ogrenciNo == ogrenciNo).FirstOrDefault().ogrenciID;
-                                if (dbContext.DonemDers.Where(x => x.donemID == model.Egitim.donemID && x.dersID == model.Egitim.dersID && x.ogrenciID == model.Ogrenci.ogrenciID).FirstOrDefault() == null)
-                                {
-                                    kayitliOgrenci.Add(ad);
-                                    listText = string.Join(Environment.NewLine, kayitliOgrenci);
-                                }
-                            }
+                                model.Ogrenci.ogrenciID = dbContext.Ogrencis.Where(x => x.ogrenciNo == model.Ogrenci.ogrenciNo).FirstOrDefault().ogrenciID;
 
-                            // Değişiklikleri kaydet
+                                if (dbContext.Egitims.Where(x =>
+
+                                    x.donemID == model.Egitim.donemID &&
+                                    x.dersID == model.Egitim.dersID &&
+                                    x.ogrenciID == model.Ogrenci.ogrenciID &&
+                                    x.grupID == model.Egitim.grupID).
+                                    SingleOrDefault() != null)
+                                {
+                                    kayitliOgrenci.Add(model.Ogrenci.ad);
+                                    kayitliOgrencis = string.Join(Environment.NewLine, kayitliOgrenci);
+                                }
+                                else
+                                {
+                                    dbContext.Egitims.Add(new Egitim
+                                    {
+                                        dersID = model.Egitim.dersID,
+                                        donemID = model.Egitim.donemID,
+                                        grupID = model.Egitim.grupID,
+                                        ogrenciID = model.Ogrenci.ogrenciID,
+                                        kullaniciID = 1
+                                    });
+                                }
+
+                            }
+                            dbContext.SaveChanges();// Değişiklikleri kaydet
                         }
-                        MessageBox.Show($"{listText}\n Bu öğrenci/öğrenciler zaten bu doneme/derse kayıtlı", "Dikkat", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    MessageBox.Show("İşlem Başarılı", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    if (kayitliOgrencis == "" || kayitliOgrencis is null)
+                    {
+                        ShowMessageBox("İşlem Başarılı", "Başarılı", MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        ShowMessageBox($"{kayitliOgrencis}\n Bu öğrenci/öğrenciler zaten bu döneme/derse kayıtlı", "Dikkat", MessageBoxIcon.Error);
+                        kayitliOgrenci.RemoveAll(x => true);
+                        kayitliOgrencis = "";
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -174,6 +196,11 @@ namespace OgrenciSecme
                 model.Egitim.dersID = sltDers.dersID;
                 Debug.WriteLine(model.Egitim.dersID);
             }
+        }
+
+        private void ShowMessageBox(string message, string caption, MessageBoxIcon icon)
+        {
+            MessageBox.Show(message, caption, MessageBoxButtons.OK, icon);
         }
     }
 }

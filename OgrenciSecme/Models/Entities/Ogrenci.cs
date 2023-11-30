@@ -12,7 +12,6 @@ namespace OgrenciSecme.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Ogrenci()
         {
-            DonemDers = new HashSet<DonemDer>();
             Egitims = new HashSet<Egitim>();
         }
 
@@ -26,9 +25,6 @@ namespace OgrenciSecme.Models
 
         [StringLength(15)]
         public string ogrenciNo { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DonemDer> DonemDers { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Egitim> Egitims { get; set; }
