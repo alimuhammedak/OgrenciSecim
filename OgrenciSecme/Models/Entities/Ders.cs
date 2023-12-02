@@ -1,4 +1,4 @@
-namespace OgrenciSecme.Models
+namespace OgrenciSecme.Models.Entities
 {
     using System;
     using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace OgrenciSecme.Models
         public Guid donemID { get; set; }
 
         [Required]
-        [StringLength(10)]
+        [StringLength(7)]
         public string kod { get; set; }
 
         [Required]

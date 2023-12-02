@@ -28,46 +28,49 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.donemCmb = new System.Windows.Forms.ComboBox();
-            this.dersCmb = new System.Windows.Forms.ComboBox();
-            this.grupCmb = new System.Windows.Forms.ComboBox();
+            this.cmbDonem = new System.Windows.Forms.ComboBox();
+            this.cmbDers = new System.Windows.Forms.ComboBox();
+            this.cmbGrup = new System.Windows.Forms.ComboBox();
             this.yukle = new System.Windows.Forms.Button();
             this.dosyaSecme = new System.Windows.Forms.Button();
             this.gostermeDgv = new System.Windows.Forms.DataGridView();
             this.kayitLbl = new System.Windows.Forms.Label();
+            this.cmbBolognaYil = new System.Windows.Forms.ComboBox();
+            this.tlpKayitDonem = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.gostermeDgv)).BeginInit();
+            this.tlpKayitDonem.SuspendLayout();
             this.SuspendLayout();
             // 
-            // donemCmb
+            // cmbDonem
             // 
-            this.donemCmb.FormattingEnabled = true;
-            this.donemCmb.Location = new System.Drawing.Point(78, 124);
-            this.donemCmb.Name = "donemCmb";
-            this.donemCmb.Size = new System.Drawing.Size(229, 21);
-            this.donemCmb.TabIndex = 0;
-            this.donemCmb.SelectedIndexChanged += new System.EventHandler(this.donemCmb_SelectedIndexChanged);
+            this.cmbDonem.FormattingEnabled = true;
+            this.cmbDonem.Location = new System.Drawing.Point(3, 64);
+            this.cmbDonem.Name = "cmbDonem";
+            this.cmbDonem.Size = new System.Drawing.Size(223, 21);
+            this.cmbDonem.TabIndex = 0;
+            this.cmbDonem.SelectedIndexChanged += new System.EventHandler(this.donemCmb_SelectedIndexChanged);
             // 
-            // dersCmb
+            // cmbDers
             // 
-            this.dersCmb.FormattingEnabled = true;
-            this.dersCmb.Location = new System.Drawing.Point(78, 191);
-            this.dersCmb.Name = "dersCmb";
-            this.dersCmb.Size = new System.Drawing.Size(229, 21);
-            this.dersCmb.TabIndex = 1;
-            this.dersCmb.SelectedIndexChanged += new System.EventHandler(this.dersCmb_SelectedIndexChanged);
+            this.cmbDers.FormattingEnabled = true;
+            this.cmbDers.Location = new System.Drawing.Point(3, 125);
+            this.cmbDers.Name = "cmbDers";
+            this.cmbDers.Size = new System.Drawing.Size(223, 21);
+            this.cmbDers.TabIndex = 1;
+            this.cmbDers.SelectedIndexChanged += new System.EventHandler(this.dersCmb_SelectedIndexChanged);
             // 
-            // grupCmb
+            // cmbGrup
             // 
-            this.grupCmb.FormattingEnabled = true;
-            this.grupCmb.Location = new System.Drawing.Point(78, 249);
-            this.grupCmb.Name = "grupCmb";
-            this.grupCmb.Size = new System.Drawing.Size(229, 21);
-            this.grupCmb.TabIndex = 3;
-            this.grupCmb.SelectedIndexChanged += new System.EventHandler(this.grupCmb_SelectedIndexChanged);
+            this.cmbGrup.FormattingEnabled = true;
+            this.cmbGrup.Location = new System.Drawing.Point(3, 186);
+            this.cmbGrup.Name = "cmbGrup";
+            this.cmbGrup.Size = new System.Drawing.Size(223, 21);
+            this.cmbGrup.TabIndex = 3;
+            this.cmbGrup.SelectedIndexChanged += new System.EventHandler(this.grupCmb_SelectedIndexChanged);
             // 
             // yukle
             // 
-            this.yukle.Location = new System.Drawing.Point(117, 374);
+            this.yukle.Location = new System.Drawing.Point(123, 391);
             this.yukle.Name = "yukle";
             this.yukle.Size = new System.Drawing.Size(134, 33);
             this.yukle.TabIndex = 4;
@@ -77,7 +80,7 @@
             // 
             // dosyaSecme
             // 
-            this.dosyaSecme.Location = new System.Drawing.Point(78, 306);
+            this.dosyaSecme.Location = new System.Drawing.Point(78, 354);
             this.dosyaSecme.Name = "dosyaSecme";
             this.dosyaSecme.Size = new System.Drawing.Size(229, 31);
             this.dosyaSecme.TabIndex = 5;
@@ -97,28 +100,54 @@
             // 
             this.kayitLbl.AutoSize = true;
             this.kayitLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.kayitLbl.Location = new System.Drawing.Point(95, 64);
+            this.kayitLbl.Location = new System.Drawing.Point(95, 27);
             this.kayitLbl.Name = "kayitLbl";
             this.kayitLbl.Size = new System.Drawing.Size(191, 33);
             this.kayitLbl.TabIndex = 7;
             this.kayitLbl.Text = "Öğrenci Kayıt";
             // 
-            // FrmOgrenciKayit 
+            // cmbBolognaYil
+            // 
+            this.cmbBolognaYil.FormattingEnabled = true;
+            this.cmbBolognaYil.Location = new System.Drawing.Point(3, 3);
+            this.cmbBolognaYil.Name = "cmbBolognaYil";
+            this.cmbBolognaYil.Size = new System.Drawing.Size(223, 21);
+            this.cmbBolognaYil.TabIndex = 8;
+            this.cmbBolognaYil.SelectedIndexChanged += new System.EventHandler(this.cmbBolognaYil_SelectedIndexChanged);
+            // 
+            // tlpKayitDonem
+            // 
+            this.tlpKayitDonem.ColumnCount = 1;
+            this.tlpKayitDonem.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpKayitDonem.Controls.Add(this.cmbDonem, 0, 1);
+            this.tlpKayitDonem.Controls.Add(this.cmbBolognaYil, 0, 0);
+            this.tlpKayitDonem.Controls.Add(this.cmbDers, 0, 2);
+            this.tlpKayitDonem.Controls.Add(this.cmbGrup, 0, 3);
+            this.tlpKayitDonem.Location = new System.Drawing.Point(78, 89);
+            this.tlpKayitDonem.Name = "tlpKayitDonem";
+            this.tlpKayitDonem.RowCount = 4;
+            this.tlpKayitDonem.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlpKayitDonem.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlpKayitDonem.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlpKayitDonem.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlpKayitDonem.Size = new System.Drawing.Size(229, 244);
+            this.tlpKayitDonem.TabIndex = 9;
+            // 
+            // FrmOgrenciKayit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(925, 484);
+            this.Controls.Add(this.tlpKayitDonem);
             this.Controls.Add(this.kayitLbl);
             this.Controls.Add(this.gostermeDgv);
             this.Controls.Add(this.dosyaSecme);
             this.Controls.Add(this.yukle);
-            this.Controls.Add(this.grupCmb);
-            this.Controls.Add(this.dersCmb);
-            this.Controls.Add(this.donemCmb);
             this.Name = "FrmOgrenciKayit";
-            this.Text = "title"; 
+            this.Text = "title";
             this.Load += new System.EventHandler(this.FrmOgrenciKayit_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gostermeDgv)).EndInit();
+            this.tlpKayitDonem.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -126,13 +155,15 @@
 
         #endregion
         private const string title = "Öğrenci Kayıt";
-        private System.Windows.Forms.ComboBox donemCmb;
-        private System.Windows.Forms.ComboBox dersCmb;
-        private System.Windows.Forms.ComboBox grupCmb;
+        private System.Windows.Forms.ComboBox cmbDonem;
+        private System.Windows.Forms.ComboBox cmbDers;
+        private System.Windows.Forms.ComboBox cmbGrup;
         private System.Windows.Forms.Button yukle;
         private System.Windows.Forms.Button dosyaSecme;
         private System.Windows.Forms.DataGridView gostermeDgv;
         private System.Windows.Forms.Label kayitLbl;
+        private System.Windows.Forms.ComboBox cmbBolognaYil;
+        private System.Windows.Forms.TableLayoutPanel tlpKayitDonem;
     }
 }
 

@@ -48,12 +48,21 @@
     <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
     </Reference>
+    <Reference Include="FluentValidation, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>packages\FluentValidation.11.8.1\lib\netstandard2.0\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -65,25 +74,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainFrm.cs">
+    <Compile Include="FrmOgrenciKayit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainFrm.Designer.cs">
-      <DependentUpon>MainFrm.cs</DependentUpon>
+    <Compile Include="FrmOgrenciKayit.Designer.cs">
+      <DependentUpon>FrmOgrenciKayit.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmOgrenciSecim.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmOgrenciSecim.Designer.cs">
+      <DependentUpon>FrmOgrenciSecim.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Entities\BolognaYil.cs" />
     <Compile Include="Models\Entities\Ders.cs" />
     <Compile Include="Models\Entities\Donem.cs" />
     <Compile Include="Models\Entities\Egitim.cs" />
     <Compile Include="Models\Entities\Grup.cs" />
     <Compile Include="Models\Entities\Kullanici.cs" />
-    <Compile Include="Models\MainModels\MainYukleModel.cs" />
     <Compile Include="Models\Entities\Ogrenci.cs" />
     <Compile Include="Models\SeciciContext.cs" />
     <Compile Include="Models\sysdiagram.cs" />
+    <Compile Include="Models\OgrenciKayitModel\YukleMethodModel.cs" />
+    <Compile Include="Models\OgrenciSecimModel\SecimMethodModel.cs" />
+    <Compile Include="Models\Validation\EgitimValidation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="MainFrm.resx">
-      <DependentUpon>MainFrm.cs</DependentUpon>
+    <EmbeddedResource Include="FrmOgrenciKayit.resx">
+      <DependentUpon>FrmOgrenciKayit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmOgrenciSecim.resx">
+      <DependentUpon>FrmOgrenciSecim.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

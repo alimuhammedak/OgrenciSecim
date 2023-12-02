@@ -6,26 +6,22 @@ namespace OgrenciSecme.Models.Entities
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("Donem")]
-    public partial class Donem
+    [Table("BolognaYil")]
+    public partial class BolognaYil
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Donem()
+        public BolognaYil()
         {
-            Ders = new HashSet<Ders>();
+            Donems = new HashSet<Donem>();
         }
 
-        public Guid donemID { get; set; }
-
-        public Guid? yilID { get; set; }
+        public Guid bolognaYilID { get; set; }
 
         [Required]
-        [StringLength(70)]
+        [StringLength(9)]
         public string ad { get; set; }
 
-        public virtual BolognaYil BolognaYil { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Ders> Ders { get; set; }
+        public virtual ICollection<Donem> Donems { get; set; }
     }
 }

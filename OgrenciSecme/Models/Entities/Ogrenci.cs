@@ -1,4 +1,4 @@
-namespace OgrenciSecme.Models
+namespace OgrenciSecme.Models.Entities
 {
     using System;
     using System.Collections.Generic;

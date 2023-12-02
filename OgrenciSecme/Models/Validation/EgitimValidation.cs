@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OgrenciSecme.Models.Entities;
 
 namespace OgrenciSecme.Models.Validation
 {
@@ -11,7 +12,7 @@ namespace OgrenciSecme.Models.Validation
     {
         public EgitimValidation()
         {
-            RuleFor(expression:x => x.donemID).NotEmpty().WithMessage("Dönem seçiniz.");
+            //RuleFor(expression:x => x.donemID).NotEmpty().WithMessage("Dönem seçiniz.");
             //RuleFor(x => x.donemID).NotNull().WithMessage("Dönem seçiniz.");
             RuleFor(x => x.dersID).NotEmpty().WithMessage("Ders seçiniz.");
             //RuleFor(x => x.dersID).NotNull().WithMessage("Ders seçiniz.");

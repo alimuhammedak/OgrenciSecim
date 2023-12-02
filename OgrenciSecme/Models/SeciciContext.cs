@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
 
-namespace OgrenciSecme.Models
+namespace OgrenciSecme.Models.Entities
 {
     public partial class SeciciContext : DbContext
     {
@@ -12,6 +12,7 @@ namespace OgrenciSecme.Models
         {
         }
 
+        public virtual DbSet<BolognaYil> BolognaYils { get; set; }
         public virtual DbSet<Ders> Ders { get; set; }
         public virtual DbSet<Donem> Donems { get; set; }
         public virtual DbSet<Egitim> Egitims { get; set; }
@@ -22,6 +23,16 @@ namespace OgrenciSecme.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<BolognaYil>()
+                .Property(e => e.ad)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<BolognaYil>()
+                .HasMany(e => e.Donems)
+                .WithOptional(e => e.BolognaYil)
+                .HasForeignKey(e => e.yilID);
+
             modelBuilder.Entity<Ders>()
                 .Property(e => e.kod)
                 .IsFixedLength()

@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using OgrenciSecme.Models.OgrenciSecimModel;
 using OgrenciSecme.Models.Validation;
 using System.Diagnostics;
+using OgrenciSecme.Models.Entities;
 
 namespace OgrenciSecme
 {
@@ -61,7 +62,7 @@ namespace OgrenciSecme
 
             if (result.IsValid)
             {
-                model.Egitim.donemID = cmbDonem.SelectedIndex;
+                model.Donem.donemID = Guid.Parse(cmbDonem.SelectedItem.ToString());
             }
             else
             {
@@ -74,7 +75,7 @@ namespace OgrenciSecme
             Debug.Assert(cmbDonem != null, nameof(cmbDonem) + " != null");
             if (cmbDonem.SelectedItem != null)
             {
-                model.Egitim.donemID = ((Donem)cmbDonem.SelectedItem).donemID;
+                model.Donem.donemID = ((Donem)cmbDonem.SelectedItem).donemID;
                 Debug.WriteLine(model.Egitim.dersID);
             }
         }

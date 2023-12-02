@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using OgrenciSecme.Models.Entities;
 
 namespace OgrenciSecme
 {
@@ -28,18 +29,23 @@ namespace OgrenciSecme
         {
             InitializeComponent();
         }
+
         private void FrmOgrenciKayit_Load(object sender, EventArgs e)
         {
             this.Text = title;
             this.gostermeDgv.Hide();
+            this.cmbGrup.Hide();
+            this.cmbDers.Hide();
+            this.cmbDonem.Hide();
             using (var dbContext = new SeciciContext())
             {
-                donemCmb.DataSource = dbContext.Donems.ToList();
-                donemCmb.DisplayMember = "ad";
-                dersCmb.DataSource = dbContext.Ders.ToList();
-                dersCmb.DisplayMember = "ad";
-                grupCmb.DataSource = dbContext.Grups.ToList();
-                grupCmb.DisplayMember = "ad";
+                //BolognaYil ve Grup combobox'larına veri çekme
+                cmbBolognaYil.DataSource = dbContext.BolognaYils.ToList();
+                cmbBolognaYil.DisplayMember = "ad";
+
+                cmbGrup.DataSource = dbContext.Grups.ToList();
+                cmbGrup.DisplayMember = "ad";
+
             }
         }
 
@@ -107,13 +113,12 @@ namespace OgrenciSecme
                                 dbContext.Ogrencis.Add(new Ogrenci { ad = model.Ogrenci.ad, ogrenciNo = model.Ogrenci.ogrenciNo });
                                 dbContext.SaveChanges();
 
-                                dbContext.Egitims.Add(new Egitim
+                                dbContext.Egitims.Add(new Egitim //Egitim tablosuna ekle
                                 {
                                     dersID = model.Egitim.dersID,
-                                    donemID = model.Egitim.donemID,
                                     grupID = model.Egitim.grupID,
                                     ogrenciID = dbContext.Ogrencis.Where(x => x.ogrenciNo == model.Ogrenci.ogrenciNo).FirstOrDefault().ogrenciID,
-                                    kullaniciID = 1
+                                    kullaniciID = Guid.Parse("16370B08-3591-EE11-BFAE-3003C89EE5A0")
                                 });
 
                             }
@@ -122,8 +127,6 @@ namespace OgrenciSecme
                                 model.Ogrenci.ogrenciID = dbContext.Ogrencis.Where(x => x.ogrenciNo == model.Ogrenci.ogrenciNo).FirstOrDefault().ogrenciID;
 
                                 if (dbContext.Egitims.Where(x =>
-
-                                    x.donemID == model.Egitim.donemID &&
                                     x.dersID == model.Egitim.dersID &&
                                     x.ogrenciID == model.Ogrenci.ogrenciID &&
                                     x.grupID == model.Egitim.grupID).
@@ -138,10 +141,9 @@ namespace OgrenciSecme
                                     dbContext.Egitims.Add(new Egitim
                                     {
                                         dersID = model.Egitim.dersID,
-                                        donemID = model.Egitim.donemID,
                                         grupID = model.Egitim.grupID,
                                         ogrenciID = model.Ogrenci.ogrenciID,
-                                        kullaniciID = 1
+                                        kullaniciID = Guid.Parse("16370B08-3591-EE11-BFAE-3003C89EE5A0")
                                     });
                                 }
 
@@ -171,39 +173,72 @@ namespace OgrenciSecme
             }
 
         }
+
+        private void cmbBolognaYil_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbDonem.SelectedItem != null)
+            {
+                BolognaYil bolognaYil = (BolognaYil)cmbDonem.SelectedItem;
+                model.BolognaYil.bolognaYilID = bolognaYil.bolognaYilID;
+                Debug.WriteLine(model.BolognaYil.bolognaYilID);
+
+                using (var context = new SeciciContext())
+                {
+                    cmbDonem.DataSource = context.BolognaYils.Where(x => x.bolognaYilID == bolognaYil.bolognaYilID);
+                    cmbDonem.DisplayMember = "ad";
+                }
+
+                cmbDonem.Show(); //BolognaYil seçildiğinde donem seçimi aktif olur
+            }
+        }
+
         private void donemCmb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (donemCmb.SelectedItem != null)
+            if (cmbDonem.SelectedItem != null)
             {
-                Donem donem = (Donem)donemCmb.SelectedItem;
-                model.Egitim.donemID = donem.donemID;
-                Debug.WriteLine(model.Egitim.donemID);
+                Donem donem = (Donem)cmbDonem.SelectedItem;
+                model.Donem.donemID = donem.donemID;
+                Debug.WriteLine(model.Donem.donemID);  
+
+                using (var context = new SeciciContext())
+                {
+                    cmbDers.DataSource = context.Ders.Where(x => x.donemID == donem.donemID);
+                    cmbDers.DisplayMember = "ad";
+                }
+
+                cmbDers.Show(); //Dönem seçildiğinde ders seçimi aktif olur
             }
 
         }
+
+        private void dersCmb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbDers.SelectedItem != null)
+            {
+                Ders ders = (Ders)cmbDers.SelectedItem;
+                model.Egitim.dersID = ders.dersID;
+                Debug.WriteLine(model.Egitim.dersID);
+
+                cmbGrup.Show(); //Ders seçildiğinde grup seçimi aktif olur
+            }
+        }
+
         private void grupCmb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (grupCmb.SelectedItem != null)
+            if (cmbGrup.SelectedItem != null)
             {
-                Grup grup = (Grup)grupCmb.SelectedItem;
+                Grup grup = (Grup)cmbGrup.SelectedItem;
                 model.Egitim.grupID = grup.grupID;
                 Debug.WriteLine(model.Egitim.grupID);
             }
 
         }
-        private void dersCmb_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (dersCmb.SelectedItem != null)
-            {
-                Ders ders = (Ders)dersCmb.SelectedItem;
-                model.Egitim.dersID = ders.dersID;
-                Debug.WriteLine(model.Egitim.dersID);
-            }
-        }
+        
 
         private void ShowMessageBox(string message, string caption, MessageBoxIcon icon)
         {
             MessageBox.Show(message, caption, MessageBoxButtons.OK, icon);
         }
+
     }
 }
