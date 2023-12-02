@@ -27,9 +27,35 @@ namespace OgrenciSecme.Models
                 .IsFixedLength()
                 .IsUnicode(false);
 
+            modelBuilder.Entity<Ders>()
+                .HasMany(e => e.Egitims)
+                .WithRequired(e => e.Der)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Donem>()
+                .HasMany(e => e.Ders)
+                .WithRequired(e => e.Donem)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Grup>()
+                .HasMany(e => e.Egitims)
+                .WithRequired(e => e.Grup)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Kullanici>()
+                .HasMany(e => e.Egitims)
+                .WithRequired(e => e.Kullanici)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<Ogrenci>()
                 .Property(e => e.ogrenciNo)
+                .IsFixedLength()
                 .IsUnicode(false);
+
+            modelBuilder.Entity<Ogrenci>()
+                .HasMany(e => e.Egitims)
+                .WithRequired(e => e.Ogrenci)
+                .WillCascadeOnDelete(false);
         }
     }
 }

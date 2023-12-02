@@ -15,7 +15,7 @@ namespace OgrenciSecme.Models
             Egitims = new HashSet<Egitim>();
         }
 
-        public int ogrenciID { get; set; }
+        public Guid ogrenciID { get; set; }
 
         [StringLength(50)]
         public string ad { get; set; }
@@ -23,7 +23,7 @@ namespace OgrenciSecme.Models
         [StringLength(50)]
         public string soyad { get; set; }
 
-        [StringLength(15)]
+        [StringLength(10)]
         public string ogrenciNo { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

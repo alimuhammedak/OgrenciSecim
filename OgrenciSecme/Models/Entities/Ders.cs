@@ -15,13 +15,19 @@ namespace OgrenciSecme.Models
         }
 
         [Key]
-        public int dersID { get; set; }
+        public Guid dersID { get; set; }
 
-        [StringLength(9)]
+        public Guid donemID { get; set; }
+
+        [Required]
+        [StringLength(10)]
         public string kod { get; set; }
 
+        [Required]
         [StringLength(50)]
         public string ad { get; set; }
+
+        public virtual Donem Donem { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Egitim> Egitims { get; set; }

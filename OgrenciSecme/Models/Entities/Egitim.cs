@@ -9,21 +9,17 @@ namespace OgrenciSecme.Models
     [Table("Egitim")]
     public partial class Egitim
     {
-        public int egitimID { get; set; }
+        public Guid egitimID { get; set; }
 
-        public int? ogrenciID { get; set; }
+        public Guid ogrenciID { get; set; }
 
-        public int? donemID { get; set; }
+        public Guid kullaniciID { get; set; }
 
-        public int? kullaniciID { get; set; }
+        public Guid grupID { get; set; }
 
-        public int? grupID { get; set; }
-
-        public int? dersID { get; set; }
+        public Guid dersID { get; set; }
 
         public virtual Ders Der { get; set; }
-
-        public virtual Donem Donem { get; set; }
 
         public virtual Grup Grup { get; set; }
 

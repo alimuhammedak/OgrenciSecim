@@ -1,6 +1,6 @@
 ﻿using ExcelDataReader;
 using OgrenciSecme.Models;
-using OgrenciSecme.Models.MainModels;
+using OgrenciSecme.Models.OgrenciKayitModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,19 +15,20 @@ using System.Windows.Forms;
 
 namespace OgrenciSecme
 {
-    public partial class MainFrm : Form
+    public partial class FrmOgrenciKayit : Form
     {
-        private string title = "Öğrenci Kayıt";
-        private string excelFile;
-        private string kayitliOgrencis;
-        private List<string> kayitliOgrenci = new List<string>();
-        private MainYukleModel model = new MainYukleModel();
+
+        private string excelFile; //Excel dosyasının yolu
+        private DialogResult rMessage; //Mesaj kutusu cevabı
+        private string kayitliOgrencis; //Kayıtlı öğrencileri tutar
+        private List<string> kayitliOgrenci = new List<string>(); //Kayıtlı öğrencilerin listesini tutar
+        private YukleMethodModel model = new YukleMethodModel();
         public DataSet result { get; set; }
-        public MainFrm()
+        public FrmOgrenciKayit()
         {
             InitializeComponent();
         }
-        private void MainFrm_Load(object sender, EventArgs e)
+        private void FrmOgrenciKayit_Load(object sender, EventArgs e)
         {
             this.Text = title;
             this.gostermeDgv.Hide();
@@ -80,11 +81,12 @@ namespace OgrenciSecme
 
             if (excelFile is null)  //Dosyanin secilip secilmediği
             {
-                MessageBox.Show("Lutfen dosya seçmeyi unutmayın", "Dikkat", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowMessageBox("Lutfen dosya seçmeyi unutmayın", "Dikkat", MessageBoxIcon.Error);
                 this.dosyaSecme.FlatAppearance.BorderColor = Color.Red;
                 this.dosyaSecme.FlatAppearance.BorderSize = 6;
             }
-            else
+            else { rMessage = MessageBox.Show("Dosyalar kayedilecek emin misiniz?", "Dikkat", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2); }
+            if (rMessage == DialogResult.Yes)
             {
                 try
                 {
@@ -127,8 +129,9 @@ namespace OgrenciSecme
                                     x.grupID == model.Egitim.grupID).
                                     SingleOrDefault() != null)
                                 {
-                                    kayitliOgrenci.Add(model.Ogrenci.ad);
-                                    kayitliOgrencis = string.Join(Environment.NewLine, kayitliOgrenci);
+                                    //kayitliOgrenci.Add(model.Ogrenci.ad);
+                                    //kayitliOgrencis = string.Join(Environment.NewLine, kayitliOgrenci);
+                                    kayitliOgrencis += model.Ogrenci.ad + "\n";
                                 }
                                 else
                                 {
@@ -161,7 +164,7 @@ namespace OgrenciSecme
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Mesaj", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowMessageBox(ex.Message, "Mesaj", MessageBoxIcon.Error);
                 }
 
 
@@ -172,8 +175,8 @@ namespace OgrenciSecme
         {
             if (donemCmb.SelectedItem != null)
             {
-                var sltDonem = (Donem)donemCmb.SelectedItem;
-                model.Egitim.donemID = sltDonem.donemID;
+                Donem donem = (Donem)donemCmb.SelectedItem;
+                model.Egitim.donemID = donem.donemID;
                 Debug.WriteLine(model.Egitim.donemID);
             }
 
@@ -182,8 +185,8 @@ namespace OgrenciSecme
         {
             if (grupCmb.SelectedItem != null)
             {
-                var sltGrup = (Grup)grupCmb.SelectedItem;
-                model.Egitim.grupID = sltGrup.grupID;
+                Grup grup = (Grup)grupCmb.SelectedItem;
+                model.Egitim.grupID = grup.grupID;
                 Debug.WriteLine(model.Egitim.grupID);
             }
 
@@ -192,8 +195,8 @@ namespace OgrenciSecme
         {
             if (dersCmb.SelectedItem != null)
             {
-                var sltDers = (Ders)dersCmb.SelectedItem;
-                model.Egitim.dersID = sltDers.dersID;
+                Ders ders = (Ders)dersCmb.SelectedItem;
+                model.Egitim.dersID = ders.dersID;
                 Debug.WriteLine(model.Egitim.dersID);
             }
         }

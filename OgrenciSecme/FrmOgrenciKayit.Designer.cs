@@ -1,6 +1,6 @@
 ﻿namespace OgrenciSecme
 {
-    partial class MainFrm
+    partial class FrmOgrenciKayit
     {
         /// <summary>
         /// Required designer variable.
@@ -103,7 +103,7 @@
             this.kayitLbl.TabIndex = 7;
             this.kayitLbl.Text = "Öğrenci Kayıt";
             // 
-            // MainFrm
+            // FrmOgrenciKayit 
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -115,9 +115,9 @@
             this.Controls.Add(this.grupCmb);
             this.Controls.Add(this.dersCmb);
             this.Controls.Add(this.donemCmb);
-            this.Name = "MainFrm";
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.MainFrm_Load);
+            this.Name = "FrmOgrenciKayit";
+            this.Text = "title"; 
+            this.Load += new System.EventHandler(this.FrmOgrenciKayit_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gostermeDgv)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -125,7 +125,7 @@
         }
 
         #endregion
-
+        private const string title = "Öğrenci Kayıt";
         private System.Windows.Forms.ComboBox donemCmb;
         private System.Windows.Forms.ComboBox dersCmb;
         private System.Windows.Forms.ComboBox grupCmb;

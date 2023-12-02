@@ -15,7 +15,7 @@ namespace OgrenciSecme.Models
             Egitims = new HashSet<Egitim>();
         }
 
-        public int kullaniciID { get; set; }
+        public Guid kullaniciID { get; set; }
 
         [StringLength(50)]
         public string ad { get; set; }
@@ -23,7 +23,7 @@ namespace OgrenciSecme.Models
         [StringLength(50)]
         public string soyad { get; set; }
 
-        [StringLength(50)]
+        [StringLength(100)]
         public string kullaniciAd { get; set; }
 
         [StringLength(50)]
