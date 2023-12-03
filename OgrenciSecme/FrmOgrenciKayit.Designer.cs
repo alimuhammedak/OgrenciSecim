@@ -41,32 +41,47 @@
             this.tlpKayitDonem.SuspendLayout();
             this.SuspendLayout();
             // 
+            // cmbBolognaYil
+            // 
+            this.cmbBolognaYil.FormattingEnabled = true;
+            this.cmbBolognaYil.Location = new System.Drawing.Point(3, 3);
+            this.cmbBolognaYil.Name = "cmbBolognaYil";
+            this.cmbBolognaYil.Text = "Bologna Yıl Seçiniz";
+            this.cmbBolognaYil.Size = new System.Drawing.Size(223, 21);
+            this.cmbBolognaYil.TabIndex = 8;
+            this.cmbBolognaYil.SelectedIndexChanged += new System.EventHandler(this.cmbBolognaYil_SelectedIndexChanged);
+            //this.cmbBolognaYil.SelectedValueChanged += new System.EventHandler(this.cmbBolognaYil_SelectedValueChanged);
+            // 
             // cmbDonem
             // 
             this.cmbDonem.FormattingEnabled = true;
             this.cmbDonem.Location = new System.Drawing.Point(3, 64);
             this.cmbDonem.Name = "cmbDonem";
+            this.cmbDonem.Text = "Donem Seçiniz";
+            this.cmbDonem.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.cmbDonem.Size = new System.Drawing.Size(223, 21);
             this.cmbDonem.TabIndex = 0;
-            this.cmbDonem.SelectedIndexChanged += new System.EventHandler(this.donemCmb_SelectedIndexChanged);
+            this.cmbDonem.SelectedIndexChanged += new System.EventHandler(this.cmbDonem_SelectedIndexChanged);
             // 
             // cmbDers
             // 
             this.cmbDers.FormattingEnabled = true;
             this.cmbDers.Location = new System.Drawing.Point(3, 125);
             this.cmbDers.Name = "cmbDers";
+            this.cmbDers.Text = "Ders Seçiniz";
             this.cmbDers.Size = new System.Drawing.Size(223, 21);
             this.cmbDers.TabIndex = 1;
-            this.cmbDers.SelectedIndexChanged += new System.EventHandler(this.dersCmb_SelectedIndexChanged);
+            this.cmbDers.SelectedIndexChanged += new System.EventHandler(this.cmbDers_SelectedIndexChanged);
             // 
             // cmbGrup
             // 
             this.cmbGrup.FormattingEnabled = true;
             this.cmbGrup.Location = new System.Drawing.Point(3, 186);
             this.cmbGrup.Name = "cmbGrup";
+            this.cmbGrup.Text = "Grup Seçiniz";
             this.cmbGrup.Size = new System.Drawing.Size(223, 21);
             this.cmbGrup.TabIndex = 3;
-            this.cmbGrup.SelectedIndexChanged += new System.EventHandler(this.grupCmb_SelectedIndexChanged);
+            this.cmbGrup.SelectedIndexChanged += new System.EventHandler(this.cmbGrup_SelectedIndexChanged);
             // 
             // yukle
             // 
@@ -76,7 +91,7 @@
             this.yukle.TabIndex = 4;
             this.yukle.Text = "YÜKLE";
             this.yukle.UseVisualStyleBackColor = true;
-            this.yukle.Click += new System.EventHandler(this.yukle_Click);
+            this.yukle.Click += new System.EventHandler(this.Yukle_Click);
             // 
             // dosyaSecme
             // 
@@ -105,15 +120,6 @@
             this.kayitLbl.Size = new System.Drawing.Size(191, 33);
             this.kayitLbl.TabIndex = 7;
             this.kayitLbl.Text = "Öğrenci Kayıt";
-            // 
-            // cmbBolognaYil
-            // 
-            this.cmbBolognaYil.FormattingEnabled = true;
-            this.cmbBolognaYil.Location = new System.Drawing.Point(3, 3);
-            this.cmbBolognaYil.Name = "cmbBolognaYil";
-            this.cmbBolognaYil.Size = new System.Drawing.Size(223, 21);
-            this.cmbBolognaYil.TabIndex = 8;
-            this.cmbBolognaYil.SelectedIndexChanged += new System.EventHandler(this.cmbBolognaYil_SelectedIndexChanged);
             // 
             // tlpKayitDonem
             // 

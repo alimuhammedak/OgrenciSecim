@@ -19,7 +19,7 @@ namespace OgrenciSecme.Models.Entities
 
         public Guid dersID { get; set; }
 
-        public virtual Ders Der { get; set; }
+        public virtual Ders Ders { get; set; }
 
         public virtual Grup Grup { get; set; }
 

@@ -17,6 +17,7 @@ namespace OgrenciSecme.Models.OgrenciSecimModel
         {
             Egitim = new Egitim();
             Donem = new Donem();
+            
         }
 
     }

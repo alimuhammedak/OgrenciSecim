@@ -40,7 +40,7 @@ namespace OgrenciSecme.Models.Entities
 
             modelBuilder.Entity<Ders>()
                 .HasMany(e => e.Egitims)
-                .WithRequired(e => e.Der)
+                .WithRequired(e => e.Ders)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Donem>()
