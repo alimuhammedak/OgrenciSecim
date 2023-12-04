@@ -15,7 +15,7 @@ namespace OgrenciSecme.Models.Entities
             Egitims = new HashSet<Egitim>();
         }
 
-        public Guid ogrenciID { get; set; }
+        public Guid ogrenciID { get; private set; } = Guid.NewGuid();
 
         [StringLength(50)]
         public string ad { get; set; }

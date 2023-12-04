@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OgrenciSecme.Models.Entities;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Data.Entity.Validation;
 
 namespace OgrenciSecme
 {
@@ -21,12 +22,13 @@ namespace OgrenciSecme
     {
         #region Tanımlamalar
 
-        private string excelFile; //Excel dosyasının yolu
-        private DialogResult rMessage; //Mesaj kutusu cevabı
-        private string kayitliOgrencis; //Kayıtlı öğrencileri tutar
-        private List<string> kayitliOgrenci = new List<string>(); //Kayıtlı öğrencilerin listesini tutar
-        private YukleMethodModel model = new YukleMethodModel();
-        public DataSet result { get; set; }
+        private string _excelFile; //Excel dosyasının yolu
+        private DialogResult _rMessage; //Mesaj kutusu cevabı
+        private string _kayitliOgrencis; //Kayıtlı öğrencileri tutar
+        private Egitim egitim;
+        private readonly List<string> _kayitliOgrenci = new List<string>(); //Kayıtlı öğrencilerin listesini tutar
+        private readonly YukleMethodModel _model = new YukleMethodModel();
+        public DataSet Result { get; set; }
 
         #endregion
 
@@ -36,10 +38,13 @@ namespace OgrenciSecme
             using (var dbContext = new SeciciContext())
             {
                 //BolognaYil ve Grup combobox'larına veri çekme
-                cmbBolognaYil.DataSource = dbContext.BolognaYils.ToList();
+
+                List<BolognaYil> bolognaYil = new List<BolognaYil>();
+                bolognaYil.Add(new BolognaYil());
+                bolognaYil.AddRange(dbContext.BolognaYils.ToList());
+                cmbBolognaYil.DataSource = bolognaYil;
                 cmbBolognaYil.DisplayMember = "ad";
                 //cmbBolognaYil.SelectedIndex = -1;
-                cmbBolognaYil.SelectedItem = null;
 
                 cmbGrup.DataSource = dbContext.Grups.ToList();
                 cmbGrup.DisplayMember = "ad";
@@ -60,29 +65,31 @@ namespace OgrenciSecme
         private void DosyaSecme_Click(object sender, EventArgs e)
         {
 
-            using (OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Excel Dosyaları 97-2003|*.xls|Excel Dosyaları|*.xlsx", Title = "Excel Dosyaları" })
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
+                openFileDialog.Filter = @"Excel Dosyaları 97-2003|*.xls|Excel Dosyaları|*.xlsx";
+                openFileDialog.Title = @"Excel Dosyaları";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    excelFile = openFileDialog.FileName;
+                    _excelFile = openFileDialog.FileName;
                     try
                     {
-                        using (var stream = File.Open(excelFile, FileMode.Open, FileAccess.Read))
+                        using (var stream = File.Open(_excelFile, FileMode.Open, FileAccess.Read))
                         {
                             using (IExcelDataReader excelDataReader = ExcelReaderFactory.CreateReader(stream))
                             {
-                                result = excelDataReader.AsDataSet(new ExcelDataSetConfiguration()
+                                Result = excelDataReader.AsDataSet(new ExcelDataSetConfiguration()
                                 {
                                     ConfigureDataTable = (_) => new ExcelDataTableConfiguration() { UseHeaderRow = true }
                                 });
                             }
                         }
                         gostermeDgv.Show();
-                        gostermeDgv.DataSource = result.Tables[0];
+                        gostermeDgv.DataSource = Result.Tables[0];
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Mesaj", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(ex.Message, @"Mesaj", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                 }
@@ -93,139 +100,171 @@ namespace OgrenciSecme
         private void Yukle_Click(object sender, EventArgs e)
         {
 
-            if (excelFile is null)  //Dosyanin secilip secilmediği
+            if (_excelFile is null)  //Dosyanin secilip secilmediği
             {
                 ShowMessageBox("Lutfen dosya seçmeyi unutmayın", "Dikkat", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.dosyaSecme.FlatAppearance.BorderColor = Color.Red;
                 this.dosyaSecme.FlatAppearance.BorderSize = 6;
             }
-            else { rMessage = MessageBox.Show("Dosyalar kayedilecek emin misiniz?", "Dikkat", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2); }
-            if (rMessage == DialogResult.Yes)
+            else { _rMessage = MessageBox.Show(@"Dosyalar kayedilecek emin misiniz?", @"Dikkat", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2); }
+            if (_rMessage == DialogResult.Yes)
             {
                 try
                 {
-                    DataTable dataTable = result.Tables[0]; //Excel Kitap Seçimi
+                    DataTable dataTable = Result.Tables[0]; //Excel Kitap Seçimi
 
                     using (var dbContext = new SeciciContext())
                     {
                         foreach (DataRow row in dataTable.Rows)
                         {
                             // Excel'den gelen verileri al
-                            model.Ogrenci.ad = row["Name"]?.ToString();
-                            model.Ogrenci.ogrenciNo = row["Okul No"]?.ToString() ?? null;
+                            string ad = row["Name"]?.ToString();
+                            string no = row["Okul No"]?.ToString() ?? null;
 
-                            if (model.Ogrenci.ogrenciNo == "" || model.Ogrenci.ogrenciNo is null) continue; //Ogrenci numarası yoksa atla
+                            if (string.IsNullOrEmpty(no))
+                                continue; //Ogrenci numarası yoksa atla
 
-                            Ogrenci ogrenci = dbContext.Ogrencis.Where(x => x.ogrenciNo == model.Ogrenci.ogrenciNo).SingleOrDefault();
+                            Ogrenci ogrenci = dbContext.Ogrencis.Where(x => x.ogrenciNo == no).FirstOrDefault(); //Öğrenci var mı?
 
                             //Yeni öğrenci ise ekle
                             if (ogrenci == null)
                             {
-                                dbContext.Ogrencis.Add(new Ogrenci { ad = model.Ogrenci.ad, ogrenciNo = model.Ogrenci.ogrenciNo });
+                                dbContext.Ogrencis.Add(new Ogrenci { ad = ad, ogrenciNo = no });
                                 dbContext.SaveChanges();
+                                ogrenci = dbContext.Ogrencis.Where(x => x.ogrenciNo == no).FirstOrDefault();
                             }
-                            
-                            model.Ogrenci = dbContext.Ogrencis.Where(x => x.ogrenciNo == model.Ogrenci.ogrenciNo).SingleOrDefault();
 
-                            var egitim = dbContext.Egitims.Where(x =>
-                                x.dersID == model.Egitim.dersID &&
-                                x.ogrenciID == model.Ogrenci.ogrenciID &&
-                                x.grupID == model.Egitim.grupID).SingleOrDefault();
+                            egitim = dbContext.Egitims.Where(x => x.ogrenciID == ogrenci.ogrenciID && x.dersID == _model.Egitim.Ders.dersID && x.grupID == _model.Egitim.Grup.grupID).FirstOrDefault(); //Öğrenci bu eğitime kayıtlı mı?   
 
                             if (egitim != null) //Öğrenci bu eğitime kayıtlı mı?
-                            {
-                                //kayitliOgrenci.Add(model.Ogrenci.ad);
-                                //kayitliOgrencis = string.Join(Environment.NewLine, kayitliOgrenci);
-                                kayitliOgrencis += model.Ogrenci.ad + "\n";
-                            }
+                                _kayitliOgrencis += ad + "\n";
+                            //kayitliOgrenci.Add(model.Ogrenci.ad);
+                            //kayitliOgrencis = string.Join(Environment.NewLine, kayitliOgrenci);
+
                             else
                             {
                                 dbContext.Egitims.Add(new Egitim
                                 {
-                                    dersID = model.Egitim.Ders.dersID,
-                                    grupID = model.Egitim.Grup.grupID,
-                                    ogrenciID = model.Ogrenci.ogrenciID,
+                                    dersID = _model.Egitim.Ders.dersID,
+                                    grupID = _model.Egitim.Grup.grupID,
+                                    ogrenciID = ogrenci.ogrenciID,
                                     kullaniciID = Guid.Parse("16370B08-3591-EE11-BFAE-3003C89EE5A0")
                                 });
                                 dbContext.SaveChanges();// Değişiklikleri kaydet
                             }
+
                         }
                     }
 
-                    if (kayitliOgrencis == "" || kayitliOgrencis is null)
+                    #region Kayitli Ogrenci Liste Gösterme
+
+                    if (!string.IsNullOrEmpty(_kayitliOgrencis))
                     {
-                        ShowMessageBox("İşlem Başarılı", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ShowMessageBox($"{_kayitliOgrencis}\n Bu öğrenci/öğrenciler zaten bu döneme/derse kayıtlı",
+                            "Dikkat", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        _kayitliOgrenci.RemoveAll(x => true); _kayitliOgrencis = "";
                     }
                     else
                     {
-                        ShowMessageBox($"{kayitliOgrencis}\n Bu öğrenci/öğrenciler zaten bu döneme/derse kayıtlı", "Dikkat", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        kayitliOgrenci.RemoveAll(x => true);
-                        kayitliOgrencis = "";
+                        ShowMessageBox("İşlem Başarılı", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
 
+                    #endregion
+
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    foreach (var eve in ex.EntityValidationErrors)
+                    {
+                        Console.WriteLine(
+                            @"Entity of type ""{0}"" in state ""{1}"" has the following validation errors:",
+                            eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                        foreach (var ve in eve.ValidationErrors)
+                        {
+                            Console.WriteLine(@"- Property: ""{0}"", Error: ""{1}""",
+                                ve.PropertyName, ve.ErrorMessage);
+                        }
+                    }
+
+                    throw;
                 }
                 catch (Exception ex)
                 {
                     ShowMessageBox(ex.Message, "Mesaj", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                //catch (Exception ex)
+                //{
+                //    ShowMessageBox(ex.Message, "Mesaj", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //}
+            }
+            else
+            {
+                MessageBox.Show("Peki", "İptal", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void cmbBolognaYil_SelectedIndexChanged(object sender, EventArgs e)
         {
             //TODO: Dönem seçimi aktif olmalı
-
-            if (cmbBolognaYil.SelectedItem != null)
+            _model.BolognaYil = (BolognaYil)cmbBolognaYil.SelectedItem;
+            if (_model.BolognaYil?.ad != null)
             {
                 cmbDonem.DataSource = null; //Dönem combobox'ını temizle
-                model.BolognaYil = (BolognaYil)cmbBolognaYil.SelectedItem; //BolognaYil seçildiğinde model'e aktar
-                Debug.WriteLine("cmbBolognaYil_SelectedIndexChanged"); //BolognaYil seçildiğinde id'sini yazdır
+                Debug.Write("cmbBolognaYil_SelectedIndexChanged : "); //BolognaYil seçildiğinde id'sini yazdır
+                Debug.WriteLine(_model.BolognaYil.bolognaYilID);
 
                 using (var context = new SeciciContext()) //BolognaYil seçildiğinde donem combobox'ına veri çekme
                 {
                     //var deneme = Guid.Parse("894963BE-5391-EE11-BFAE-3003C89EE5A0");
+                    //var deneme2 = new Guid();
 
-                    cmbDonem.DataSource = context.Donems.Where(donem => donem.yilID == model.BolognaYil.bolognaYilID).ToList();
+                    cmbDonem.DataSource = context.Donems.Where(donem => donem.yilID == _model.BolognaYil.bolognaYilID).ToList();
                     cmbDonem.DisplayMember = "ad";
                     //cmbDonem.SelectedIndex = -1;
                     cmbDonem.SelectedItem = null;
                 }
 
-                if (cmbDonem.Items.Count > 0)
-                {
-                    cmbDonem.Show(); //BolognaYil seçildiğinde donem seçimi aktif olur
-                    cmbDonem.Text = "Dönem Seçiniz";
-                }
 
             }
+            if (cmbDonem.Items.Count > 0)
+            {
+                cmbDonem.Show(); //BolognaYil seçildiğinde donem seçimi aktif olur
+                cmbDonem.Text = "Dönem Seçiniz";
+            }
+            else
+            {
+                cmbDonem.Hide(); cmbDers.Hide(); cmbGrup.Hide();
+            }
+
         }
 
         private void cmbDonem_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbDonem.SelectedItem != null)
+            _model.Donem = (Donem)cmbDonem.SelectedItem;
+            if (_model.Donem?.ad != null)
             {
-                model.Donem = (Donem)cmbDonem.SelectedItem;
+                cmbDers.DataSource = null; //Ders combobox'ını temizle
                 Debug.Write("donemCmb_SelectedIndexChanged : ");
-                Debug.WriteLine(model.Donem.donemID);
+                Debug.WriteLine(_model.Donem.donemID);
 
                 using (var context = new SeciciContext())
                 {
-                    cmbDers.DataSource = context.Ders.Where(x => x.donemID == model.Donem.donemID).ToList();
+                    cmbDers.DataSource = context.Ders.Where(x => x.donemID == _model.Donem.donemID).ToList();
                     cmbDers.DisplayMember = "ad";
                     cmbDers.SelectedItem = null;
                 }
+            }
 
-                if (cmbDers.Items.Count > 0)
-                {
-                    cmbDers.Show(); //Donem seçildiğinde ders seçimi aktif olur
-                    cmbDers.Text = "Ders Seçiniz";
-                    cmbGrup.Text = "Grup Seçiniz";
-                }
-                else
-                {
-                    cmbDers.Hide();
-                    cmbGrup.Hide();
-                }
+            if (cmbDers.Items.Count > 0)
+            {
+                cmbDers.Show(); //Donem seçildiğinde ders seçimi aktif olur
+                cmbDers.Text = @"Ders Seçiniz";
+                cmbGrup.Text = @"Grup Seçiniz";
+            }
+            else
+            {
+                cmbDers.Hide();
+                cmbGrup.Hide();
             }
 
         }
@@ -234,9 +273,9 @@ namespace OgrenciSecme
         {
             if (cmbDers.SelectedItem != null)
             {
-                model.Egitim.Ders = (Ders)cmbDers.SelectedItem;
+                _model.Egitim.Ders = (Ders)cmbDers.SelectedItem;
                 Debug.Write("dersCmb_SelectedIndexChanged : ");
-                Debug.WriteLine(model.Egitim.Ders.dersID);
+                Debug.WriteLine(_model.Egitim.Ders.dersID);
                 cmbGrup.Show(); //Ders seçildiğinde grup seçimi aktif olur
             }
         }
@@ -245,13 +284,13 @@ namespace OgrenciSecme
         {
             if (cmbGrup.SelectedItem != null)
             {
-                model.Egitim.Grup = (Grup)cmbGrup.SelectedItem;
-                Debug.WriteLine(model.Egitim.Grup.grupID);
+                _model.Egitim.Grup = (Grup)cmbGrup.SelectedItem;
+                Debug.WriteLine(_model.Egitim.Grup.grupID);
             }
 
         }
 
-        private void ShowMessageBox(string message, string caption, MessageBoxButtons button, MessageBoxIcon icon)
+        private static void ShowMessageBox(string message, string caption, MessageBoxButtons button, MessageBoxIcon icon)
         {
             MessageBox.Show(message, caption, button, icon);
         }

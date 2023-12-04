@@ -9,7 +9,7 @@ namespace OgrenciSecme.Models.Entities
     [Table("Egitim")]
     public partial class Egitim
     {
-        public Guid egitimID { get; set; }
+        public Guid egitimID { get; private set; } = Guid.NewGuid();
 
         public Guid ogrenciID { get; set; }
 

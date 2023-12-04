@@ -158,7 +158,7 @@
             this.PerformLayout();
 
         }
-
+        
         #endregion
         private const string title = "Öğrenci Kayıt";
         private System.Windows.Forms.ComboBox cmbDonem;
