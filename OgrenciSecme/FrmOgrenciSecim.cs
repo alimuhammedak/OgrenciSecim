@@ -17,32 +17,30 @@ namespace OgrenciSecme
 {
     public partial class FrmOgrenciSecim : Form
     {
-        private SecimMethodModel model = new SecimMethodModel();
+        private SecimMethodModel _model = new SecimMethodModel();
         public FrmOgrenciSecim()
         {
             InitializeComponent();
+            using (var dbContext = new SeciciContext())
+            {
+                //BolognaYil ve Grup combobox'larına veri çekme
+
+                cmbBolognaYil.DataSource = dbContext.BolognaYils.ToList();
+                cmbBolognaYil.DisplayMember = "ad";
+                //cmbBolognaYil.SelectedIndex = -1;
+
+                cmbGrup.DataSource = dbContext.Grups.ToList();
+                cmbGrup.DisplayMember = "ad";
+
+            }
         }
 
         private void FrmOgrenciSecim_Load(object sender, EventArgs e)
         {
             this.Text = title;
-            using (var dbContext = new SeciciContext())
-            {
-                cmbDonem.DataSource = dbContext.Donems.ToList();
-                cmbDonem.DisplayMember = "ad";
-                cmbDonem.SelectedItem = null;
-                cmbDonem.Text = "Donem Seçiniz";
-
-                cmbDers.DataSource = dbContext.Ders.ToList();
-                cmbDers.DisplayMember = "ad";
-                cmbDers.SelectedItem = null;
-                cmbDers.Text = "Ders Seçiniz";
-
-                cmbGrup.DataSource = dbContext.Grups.ToList();
-                cmbGrup.DisplayMember = "ad";
-                cmbGrup.SelectedItem = null;
-                cmbGrup.Text = "Grup Seçiniz";
-            }
+            this.cmbGrup.Hide();
+            this.cmbDers.Hide();
+            this.cmbDonem.Hide();
         }
 
         private void btnGorunenTemizle_Click(object sender, EventArgs e)
@@ -57,46 +55,90 @@ namespace OgrenciSecme
 
         private void btnGetirOgr_Click(object sender, EventArgs e)
         {
-            EgitimValidation validation = new EgitimValidation();
-            var result = validation.Validate(new Egitim());
+            
+        }
 
-            if (result.IsValid)
+        private void cmbBolognaYil_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //TODO: Dönem seçimi aktif olmalı
+            _model.BolognaYil = (BolognaYil)cmbBolognaYil.SelectedItem;
+            if (!string.IsNullOrEmpty(_model.BolognaYil.ad))
             {
-                model.Donem.donemID = Guid.Parse(cmbDonem.SelectedItem.ToString());
+                cmbDonem.DataSource = null; //Dönem combobox'ını temizle
+                Debug.Write("cmbBolognaYil_SelectedIndexChanged : "); //BolognaYil seçildiğinde id'sini yazdır
+                Debug.WriteLine(_model.BolognaYil.bolognaYilID);
+
+                using (var context = new SeciciContext()) //BolognaYil seçildiğinde donem combobox'ına veri çekme
+                {
+                    cmbDonem.DataSource = context.Donems.Where(donem => donem.yilID == _model.BolognaYil.bolognaYilID).ToList();
+                    cmbDonem.DisplayMember = "ad";
+                    //cmbDonem.SelectedIndex = -1;
+                    cmbDonem.SelectedItem = null;
+                }
+
+            }
+            if (cmbDonem.Items.Count > 0)
+            {
+                cmbDonem.Show(); //BolognaYil seçildiğinde donem seçimi aktif olur
+                cmbDonem.Text = "Dönem Seçiniz";
             }
             else
             {
-                MessageBox.Show(result.Errors[0].ErrorMessage);
+                cmbDonem.Hide(); cmbDers.Hide(); cmbGrup.Hide();
             }
+
         }
 
         private void cmbDonem_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Debug.Assert(cmbDonem != null, nameof(cmbDonem) + " != null");
-            if (cmbDonem.SelectedItem != null)
+            _model.Donem = (Donem)cmbDonem.SelectedItem;
+            if (_model.Donem?.ad != null)
             {
-                model.Donem.donemID = ((Donem)cmbDonem.SelectedItem).donemID;
-                Debug.WriteLine(model.Egitim.dersID);
+                cmbDers.DataSource = null; //Ders combobox'ını temizle
+                Debug.Write("donemCmb_SelectedIndexChanged : ");
+                Debug.WriteLine(_model.Donem.donemID);
+
+                using (var context = new SeciciContext())
+                {
+                    cmbDers.DataSource = context.Ders.Where(x => x.donemID == _model.Donem.donemID).ToList();
+                    cmbDers.DisplayMember = "ad";
+                    cmbDers.SelectedItem = null;
+                }
             }
+
+            if (cmbDers.Items.Count > 0)
+            {
+                cmbDers.Show(); //Donem seçildiğinde ders seçimi aktif olur
+                cmbDers.Text = @"Ders Seçiniz";
+                cmbGrup.Text = @"Grup Seçiniz";
+            }
+            else
+            {
+                cmbDers.Hide();
+                cmbGrup.Hide();
+            }
+
         }
 
         private void cmbDers_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbDers.SelectedItem != null)
             {
-                model.Egitim.dersID = ((Ders)cmbDers.SelectedItem).dersID;
-                Debug.WriteLine(model.Egitim.dersID);
+                _model.Egitim.Ders = (Ders)cmbDers.SelectedItem;
+                Debug.Write("dersCmb_SelectedIndexChanged : ");
+                Debug.WriteLine(_model.Egitim.Ders.dersID);
+                cmbGrup.Show(); //Ders seçildiğinde grup seçimi aktif olur
             }
-
         }
 
         private void cmbGrup_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbGrup.SelectedItem != null)
             {
-                model.Egitim.grupID = ((Grup)cmbGrup.SelectedItem).grupID;
-                Debug.WriteLine(model.Egitim.grupID);
+                _model.Egitim.Grup = (Grup)cmbGrup.SelectedItem;
+                Debug.WriteLine(_model.Egitim.Grup.grupID);
             }
+
         }
     }
 }

@@ -39,10 +39,7 @@ namespace OgrenciSecme
             {
                 //BolognaYil ve Grup combobox'larına veri çekme
 
-                List<BolognaYil> bolognaYil = new List<BolognaYil>();
-                bolognaYil.Add(new BolognaYil());
-                bolognaYil.AddRange(dbContext.BolognaYils.ToList());
-                cmbBolognaYil.DataSource = bolognaYil;
+                cmbBolognaYil.DataSource = dbContext.BolognaYils.ToList();
                 cmbBolognaYil.DisplayMember = "ad";
                 //cmbBolognaYil.SelectedIndex = -1;
 
@@ -102,7 +99,7 @@ namespace OgrenciSecme
 
             if (_excelFile is null)  //Dosyanin secilip secilmediği
             {
-                ShowMessageBox("Lutfen dosya seçmeyi unutmayın", "Dikkat", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lutfen dosya seçmeyi unutmayın", "Dikkat", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.dosyaSecme.FlatAppearance.BorderColor = Color.Red;
                 this.dosyaSecme.FlatAppearance.BorderSize = 6;
             }
@@ -160,13 +157,13 @@ namespace OgrenciSecme
 
                     if (!string.IsNullOrEmpty(_kayitliOgrencis))
                     {
-                        ShowMessageBox($"{_kayitliOgrencis}\n Bu öğrenci/öğrenciler zaten bu döneme/derse kayıtlı",
+                        MessageBox.Show($"{_kayitliOgrencis}\n Bu öğrenci/öğrenciler zaten bu döneme/derse kayıtlı",
                             "Dikkat", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         _kayitliOgrenci.RemoveAll(x => true); _kayitliOgrencis = "";
                     }
                     else
                     {
-                        ShowMessageBox("İşlem Başarılı", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("İşlem Başarılı", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
 
                     #endregion
@@ -190,12 +187,8 @@ namespace OgrenciSecme
                 }
                 catch (Exception ex)
                 {
-                    ShowMessageBox(ex.Message, "Mesaj", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, "Mesaj", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                //catch (Exception ex)
-                //{
-                //    ShowMessageBox(ex.Message, "Mesaj", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //}
             }
             else
             {
@@ -207,7 +200,7 @@ namespace OgrenciSecme
         {
             //TODO: Dönem seçimi aktif olmalı
             _model.BolognaYil = (BolognaYil)cmbBolognaYil.SelectedItem;
-            if (_model.BolognaYil?.ad != null)
+            if (!string.IsNullOrEmpty(_model.BolognaYil?.ad))
             {
                 cmbDonem.DataSource = null; //Dönem combobox'ını temizle
                 Debug.Write("cmbBolognaYil_SelectedIndexChanged : "); //BolognaYil seçildiğinde id'sini yazdır
@@ -290,14 +283,5 @@ namespace OgrenciSecme
 
         }
 
-        private static void ShowMessageBox(string message, string caption, MessageBoxButtons button, MessageBoxIcon icon)
-        {
-            MessageBox.Show(message, caption, button, icon);
-        }
-
-        //private void cmbBolognaYil_SelectedValueChanged(object sender, EventArgs e)
-        //{
-        //    Debug.WriteLine("cmbBolognaYil_SelectedValueChanged");
-        //}
     }
 }

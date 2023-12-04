@@ -16,7 +16,7 @@ namespace OgrenciSecme
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmOgrenciKayit());
+            Application.Run(new FrmOgrenciSecim());
         }
     }
 }
