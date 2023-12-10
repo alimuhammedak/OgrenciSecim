@@ -1,20 +1,15 @@
 ﻿using ExcelDataReader;
-using OgrenciSecme.Models;
+using OgrenciSecme.Models.Entities;
 using OgrenciSecme.Models.OgrenciKayitModel;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
+using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using OgrenciSecme.Models.Entities;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Data.Entity.Validation;
 
 namespace OgrenciSecme
 {
@@ -25,7 +20,7 @@ namespace OgrenciSecme
         private string _excelFile; //Excel dosyasının yolu
         private DialogResult _rMessage; //Mesaj kutusu cevabı
         private string _kayitliOgrencis; //Kayıtlı öğrencileri tutar
-        private Egitim egitim;
+        private Egitim _egitim;
         private readonly List<string> _kayitliOgrenci = new List<string>(); //Kayıtlı öğrencilerin listesini tutar
         private readonly YukleMethodModel _model = new YukleMethodModel();
         public DataSet Result { get; set; }
@@ -35,6 +30,11 @@ namespace OgrenciSecme
         public FrmOgrenciKayit()
         {
             InitializeComponent();
+
+        }
+
+        private void FrmOgrenciKayit_Load(object sender, EventArgs e)
+        {
             using (var dbContext = new SeciciContext())
             {
                 //BolognaYil ve Grup combobox'larına veri çekme
@@ -47,10 +47,7 @@ namespace OgrenciSecme
                 cmbGrup.DisplayMember = "ad";
 
             }
-        }
 
-        private void FrmOgrenciKayit_Load(object sender, EventArgs e)
-        {
             this.Text = title;
             this.gostermeDgv.Hide();
             this.cmbGrup.Hide();
@@ -103,7 +100,7 @@ namespace OgrenciSecme
                 this.dosyaSecme.FlatAppearance.BorderColor = Color.Red;
                 this.dosyaSecme.FlatAppearance.BorderSize = 6;
             }
-            else { _rMessage = MessageBox.Show(@"Dosyalar kayedilecek emin misiniz?", @"Dikkat", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2); }
+            else { _rMessage = MessageBox.Show(@"Dosyalar kayedilecek emin misiniz?", @"Dikkat", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2); }
             if (_rMessage == DialogResult.Yes)
             {
                 try
@@ -131,9 +128,9 @@ namespace OgrenciSecme
                                 ogrenci = dbContext.Ogrencis.Where(x => x.ogrenciNo == no).FirstOrDefault();
                             }
 
-                            egitim = dbContext.Egitims.Where(x => x.ogrenciID == ogrenci.ogrenciID && x.dersID == _model.Egitim.Ders.dersID && x.grupID == _model.Egitim.Grup.grupID).FirstOrDefault(); //Öğrenci bu eğitime kayıtlı mı?   
+                            _egitim = dbContext.Egitims.Where(x => x.ogrenciID == ogrenci.ogrenciID && x.dersID == _model.Egitim.Ders.dersID && x.grupID == _model.Egitim.Grup.grupID).FirstOrDefault(); //Öğrenci bu eğitime kayıtlı mı?   
 
-                            if (egitim != null) //Öğrenci bu eğitime kayıtlı mı?
+                            if (_egitim != null) //Öğrenci bu eğitime kayıtlı mı?
                                 _kayitliOgrencis += ad + "\n";
                             //kayitliOgrenci.Add(model.Ogrenci.ad);
                             //kayitliOgrencis = string.Join(Environment.NewLine, kayitliOgrenci);
@@ -159,7 +156,7 @@ namespace OgrenciSecme
                     {
                         MessageBox.Show($"{_kayitliOgrencis}\n Bu öğrenci/öğrenciler zaten bu döneme/derse kayıtlı",
                             "Dikkat", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        _kayitliOgrenci.RemoveAll(x => true); _kayitliOgrencis = "";
+                        _kayitliOgrenci.RemoveAll(x => true); _kayitliOgrencis = string.Empty;
                     }
                     else
                     {
@@ -283,5 +280,16 @@ namespace OgrenciSecme
 
         }
 
+        private void btnAnaMenu_Click(object sender, EventArgs e)
+        {
+            base.Show();
+            this.Close();
+        }
+
+        private void btnGeriAl_Click(object sender, EventArgs e)
+        {
+            //TODO: En son İşlem Geri Alınacak
+
+        }
     }
 }

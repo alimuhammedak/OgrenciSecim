@@ -4,7 +4,6 @@ namespace OgrenciSecme.Models.Entities
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("Ogrenci")]
     public partial class Ogrenci
@@ -25,6 +24,8 @@ namespace OgrenciSecme.Models.Entities
 
         [StringLength(10)]
         public string ogrenciNo { get; set; }
+
+        public string adSoyad => $"{ad} {soyad}";
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Egitim> Egitims { get; set; }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using OgrenciSecme.Models.Entities;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OgrenciSecme.Models.Entities;
 
 namespace OgrenciSecme.Models.OgrenciKayitModel
 {

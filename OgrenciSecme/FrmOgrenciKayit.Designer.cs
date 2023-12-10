@@ -38,20 +38,14 @@
             this.cmbBolognaYil = new System.Windows.Forms.ComboBox();
             this.tlpKayitDonem = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnGeriAl = new System.Windows.Forms.Button();
+            this.btnAnaMenu = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.gostermeDgv)).BeginInit();
             this.tlpKayitDonem.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // cmbBolognaYil
-            // 
-            this.cmbBolognaYil.FormattingEnabled = true;
-            this.cmbBolognaYil.Location = new System.Drawing.Point(3, 3);
-            this.cmbBolognaYil.Name = "cmbBolognaYil";
-            this.cmbBolognaYil.Size = new System.Drawing.Size(223, 21);
-            this.cmbBolognaYil.TabIndex = 8;
-            this.cmbBolognaYil.Text = "Bologna Yıl Seçiniz";
-            this.cmbBolognaYil.SelectedIndexChanged += new System.EventHandler(this.cmbBolognaYil_SelectedIndexChanged);
             // 
             // cmbDonem
             // 
@@ -123,6 +117,16 @@
             this.kayitLbl.TabIndex = 7;
             this.kayitLbl.Text = "Öğrenci Kayıt";
             // 
+            // cmbBolognaYil
+            // 
+            this.cmbBolognaYil.FormattingEnabled = true;
+            this.cmbBolognaYil.Location = new System.Drawing.Point(3, 3);
+            this.cmbBolognaYil.Name = "cmbBolognaYil";
+            this.cmbBolognaYil.Size = new System.Drawing.Size(223, 21);
+            this.cmbBolognaYil.TabIndex = 8;
+            this.cmbBolognaYil.Text = "Bologna Yıl Seçiniz";
+            this.cmbBolognaYil.SelectedIndexChanged += new System.EventHandler(this.cmbBolognaYil_SelectedIndexChanged);
+            // 
             // tlpKayitDonem
             // 
             this.tlpKayitDonem.ColumnCount = 1;
@@ -147,8 +151,8 @@
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.yukle, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.dosyaSecme, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.yukle, 0, 1);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(98, 353);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
@@ -157,11 +161,49 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(185, 100);
             this.tableLayoutPanel1.TabIndex = 10;
             // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 3;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.Controls.Add(this.btnAnaMenu, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.btnGeriAl, 2, 0);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(414, 413);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(484, 59);
+            this.tableLayoutPanel2.TabIndex = 11;
+            // 
+            // btnGeriAl
+            // 
+            this.btnGeriAl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnGeriAl.Location = new System.Drawing.Point(325, 23);
+            this.btnGeriAl.Name = "btnGeriAl";
+            this.btnGeriAl.Size = new System.Drawing.Size(156, 33);
+            this.btnGeriAl.TabIndex = 6;
+            this.btnGeriAl.Text = "Son İşlemi Geri Al";
+            this.btnGeriAl.UseVisualStyleBackColor = true;
+            this.btnGeriAl.Click += new System.EventHandler(this.btnGeriAl_Click);
+            // 
+            // btnAnaMenu
+            // 
+            this.btnAnaMenu.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnAnaMenu.Location = new System.Drawing.Point(3, 23);
+            this.btnAnaMenu.Name = "btnAnaMenu";
+            this.btnAnaMenu.Size = new System.Drawing.Size(155, 33);
+            this.btnAnaMenu.TabIndex = 5;
+            this.btnAnaMenu.Text = "Ana Menu";
+            this.btnAnaMenu.UseVisualStyleBackColor = true;
+            this.btnAnaMenu.Click += new System.EventHandler(this.btnAnaMenu_Click);
+            // 
             // FrmOgrenciKayit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(925, 484);
+            this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.tlpKayitDonem);
             this.Controls.Add(this.kayitLbl);
@@ -172,6 +214,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gostermeDgv)).EndInit();
             this.tlpKayitDonem.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -189,6 +232,9 @@
         private System.Windows.Forms.ComboBox cmbBolognaYil;
         private System.Windows.Forms.TableLayoutPanel tlpKayitDonem;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.Button btnGeriAl;
+        private System.Windows.Forms.Button btnAnaMenu;
     }
 }
 
